@@ -1,10 +1,12 @@
 package walking.game;
 
+import walking.game.util.Direction;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -27,15 +29,18 @@ public class WalkingBoardTest {
 
     @ParameterizedTest
     @CsvSource({
-        "1, 0, 10",
+        "0, 0, 3",
+        "1, 0, 4",
+        "1, 2, 4",
     })
     public void testCustomInit(int x, int y, int expected) {
         int[][] original = new int[][]{
-            new int[]{1, 4, 5},
-            new int[]{4, 5, 2, 4},
-            new int[]{2, 4, 1, 0},
-            new int[]{2, 3}
+            {1, 4, 5},
+            {4, 5, 2, 4},
+            {2, 4, 1, 0},
+            {2, 3}
         };
+
         WalkingBoard wb = new WalkingBoard(original);
 
         int[][] actual = wb.getTiles();
@@ -49,20 +54,37 @@ public class WalkingBoardTest {
             }
         }
 
-        // If you pass an array to the constructor and later modify a value in it, the respective tile retains the originally passed value.
+        original[y][x] = 10;
+        assertEquals(expected, wb.getTile(x,y));
 
-        // assertEquals(original, actual);
-        // for (int i = 0; i < original.length; i++) {
-        //     for (int j = 0; j < original[i].length; j++) {
-        //         original[i][j] = original[i][j] + expected;
-        //     }
-        // }
-        // original[y][x] += expected;
-        // assertEquals(original[y][x] - expected, actual[y][x]);
+        // If you modify an element in the return value of getTiles(), and get the value of the respective tile again, this newly received content has to be the originally set value.
 
+        actual[0][0] = 10;
+        assertNotEquals(1, wb.getTiles()[0][0]);
+    }
 
-        // actual[y][x] = expected;
-        // int[][] actual2 = wb.getTiles();
-        // assertNotEquals(actual[y][x], actual2[y][x]);
+    @Test
+    public void testMoves() {
+        WalkingBoard wb = new WalkingBoard(5);
+        for (int i = 0; i < wb.getTiles().length; i++) {
+            assertEquals(3, wb.getTile(i,0));
+        }
+        wb.moveAndSet(Direction.RIGHT, 10);
+        wb.moveAndSet(Direction.RIGHT, 10);
+        wb.moveAndSet(Direction.RIGHT, 10);
+        wb.moveAndSet(Direction.RIGHT, 10);
+
+        //Include a step that tries to move outside of the board.
+        //In this case, check that both the position and the board’s contents are unchanged.
+
+        assertEquals(3, wb.getTile(0,0));
+        for (int i = 1; i < wb.getTiles().length; i++) {
+            assertEquals(10, wb.getTile(i,0));
+        }
+
+        assertEquals(3, wb.getTile(0,4));
+        wb.moveAndSet(Direction.RIGHT, 10);
+        assertEquals(3, wb.getTile(0,4));
+        assertArrayEquals(new int[] {4,0}, wb.getPosition());
     }
 }

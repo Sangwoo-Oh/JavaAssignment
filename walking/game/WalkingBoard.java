@@ -19,10 +19,11 @@ public class WalkingBoard {
         }
     }
     public WalkingBoard(int[][] tiles) {
-        this.tiles = Arrays.copyOf(tiles, tiles.length);
-        for (int i = 0; i < tiles.length; i++) {
+        this.tiles = new int[tiles.length][];
+        for (int i = 0; i < this.tiles.length; i++) {
+            this.tiles[i] = new int[tiles[i].length];
             for (int j = 0; j < tiles[i].length; j++) {
-                this.tiles[i][j] = tiles[i][j] > BASE_TILE_SCORE ? tiles[i][j] : BASE_TILE_SCORE;
+                this.tiles[i][j] = tiles[i][j] < BASE_TILE_SCORE ? BASE_TILE_SCORE : tiles[i][j];
             }
         }
     }
@@ -52,16 +53,12 @@ public class WalkingBoard {
         return 0;
     }
 
-    /**
-     * If the move would make the figure leave the board, cancel the move: the figure remains where it was, the state of the board doesn’t change at all, and the method immediately returns 0.
-     * Otherwise, the method returns the old value of the new position, and its value is set to the second argument.
-     */
     public int moveAndSet(Direction direction, int value) {
         if (!isValidPosition(x + getXStep(direction),y + getYStep(direction))) return 0;
         x += getXStep(direction);
         y += getYStep(direction);
         int ret = getTile(x,y);
-        tiles[x][y] = value;
+        tiles[y][x] = value;
         return ret;
     }
 }
