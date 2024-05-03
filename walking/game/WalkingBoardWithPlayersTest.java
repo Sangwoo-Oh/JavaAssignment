@@ -20,17 +20,26 @@ public class WalkingBoardWithPlayersTest {
     public void walk1Test() {
         WalkingBoardWithPlayers wb = new WalkingBoardWithPlayers(3, 3);
         wb.walk(1,1,1);
+        /**
+         *  3 3 3
+         *  3 3 3
+         *  3 3 3
+        */
         int[][] expected = new int[][] {
-            {3, 1, 1},
-            {3, 3, 2},
-            {3, 3, 2}
+            {3, 2, 3},
+            {3, 3, 5},
+            {8, 7, 6}
         };
 
         // board values
-        assertArrayEquals(expected, wb.getTiles());
+        for (int i = 0; i < wb.getTiles().length; i++) {
+            for (int j = 0; j < wb.getTiles()[i].length; j++) {
+                assertEquals(expected[i][j], wb.getTiles()[i][j]);
+            }
+        }
 
         // scores
-        assertArrayEquals(new int[] { 7,6,6 }, wb.getScores());
+        assertArrayEquals(new int[] { 3,9,6 }, wb.getScores());
     }
 
     @Test
@@ -41,17 +50,21 @@ public class WalkingBoardWithPlayersTest {
             {5, 6, 7}
         };
         WalkingBoardWithPlayers wb = new WalkingBoardWithPlayers(passedArr, 2);
-        wb.walk(1,1,1);
+        wb.walk(1,2,1);
         int[][] expected = new int[][] {
-            {3, 3, 2},
+            {8, 7, 3},
             {4},
             {5, 6, 7}
         };
         // board values
-        assertArrayEquals(expected, wb.getTiles());
+        for (int i = 0; i < wb.getTiles().length; i++) {
+            for (int j = 0; j < wb.getTiles()[i].length; j++) {
+                assertEquals(expected[i][j], wb.getTiles()[i][j]);
+            }
+        }
 
         // scores
-        assertArrayEquals(new int[] { 8, 6 }, wb.getScores());
+        assertArrayEquals(new int[] { 5, 6 }, wb.getScores());
     }
 
 }

@@ -38,7 +38,13 @@ public class WalkingBoard {
         return tiles[y][x];
     }
     public int[][] getTiles() {
-        int[][] copyOfTiles = Arrays.copyOf(tiles, tiles.length);
+        int[][] copyOfTiles = new int[tiles.length][];
+        for (int i = 0; i < tiles.length; i++) {
+            copyOfTiles[i] = new int[tiles[i].length];
+            for (int j = 0; j < tiles[i].length; j++) {
+                copyOfTiles[i][j] = tiles[i][j];
+            }
+        }
         return copyOfTiles;
     }
     public static int getXStep(Direction direction) {
